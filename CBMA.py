@@ -1,14 +1,9 @@
-class Chomp1d(nn.Module):
-    def __init__(self, chomp_size):
-        super(Chomp1d, self).__init__()
-        self.chomp_size = chomp_size
-    def forward(self, x):
-        return x[:, :, :-self.chomp_size].contiguous()
+
 
 class LocalTemporalResponseEnhancement(nn.Module):
     def __init__(self, channels):
         super(LocalTemporalResponseEnhancement, self).__init__()
-        # 主卷积路径
+        
         self.main_conv_path = nn.Sequential(
             nn.Conv1d(channels, channels, kernel_size=3, padding=1, groups=channels, bias=False),
             nn.BatchNorm1d(channels),
@@ -27,6 +22,14 @@ class LocalTemporalResponseEnhancement(nn.Module):
             output = x * main_scale * secondary_scale
         return output
 
+
+class Chomp1d(nn.Module):
+    def __init__(self, chomp_size):
+        super(Chomp1d, self).__init__()
+        self.chomp_size = chomp_size
+    def forward(self, x):
+        return x[:, :, :-self.chomp_size].contiguous()
+        
 class TCN(nn.Module):
     def __init__(self, n_inputs, n_outputs, kernel_size, stride, dilation, padding, dropout=0.5):
         super(TCN, self).__init__()
